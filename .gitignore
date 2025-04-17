@@ -1,0 +1,96 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment variables and configs
+.env
+.env.*
+
+# VSCode configs (se estiver usando)
+.vscode/
+
+# Virtual environment
+.venv/
+venv/
+ENV/
+env/
+
+# Jupyter Notebook checkpoints (caso use para prototipar)
+.ipynb_checkpoints
+
+# PyInstaller
+dist/
+build/
+*.spec
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# pip logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# Docker
+*.log
+docker-compose.override.yml
+docker-compose*.local.yml
+
+# Docker volumes and data
+data/
+volumes/
+logs/
+*.pid
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Audio or binary artifacts (opcional, caso você grave exemplos)
+*.wav
+*.mp3
+*.flac
+*.ogg
+*.aac
+*.m4a
+
+# PDF or generated docs
+*.pdf
+doc/_build/
+
+# Model artifacts (caso salve modelos treinados)
+*.h5
+*.pt
+*.pth
+*.onnx
+checkpoints/
+models/
+
+# Node.js stuff (caso venha a ter algum front-end acoplado)
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Cache de ferramentas como Poetry ou pipenv
+poetry.lock
+Pipfile.lock
+__pypackages__/

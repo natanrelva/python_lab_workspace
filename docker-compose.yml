@@ -1,0 +1,16 @@
+services:
+  main:
+    build:
+      context: .
+    container_name: main
+    volumes:
+      - .:/volumes
+    working_dir: /app
+    command: python ./app/main.py
+    environment:
+      - LANG=pt_BR.UTF-8
+    networks:
+      - audio_network
+networks:
+  audio_network:
+    driver: bridge
