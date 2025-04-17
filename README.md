@@ -95,7 +95,7 @@ Em outras palavras, este framework rompe com o paradigma da tradução literal. 
 
 ### Canais (C)
 
-A arquitetura baseia-se em múltiplos canais full-duplex, onde cada canal realiza tanto a codificação quanto a decodificação. Cada canal recebe um **objeto de valor especial**, responsável por encapsular as informações linguísticas essenciais. Esse objeto, que chamo com carinho de **objeto mórfico**, é o produto de operações estruturais baseadas em morfemas.
+A arquitetura baseia-se em múltiplos canais full-duplex, onde cada canal realiza tanto a codificação quanto a decodificação. Cada canal recebe um **objeto de valor especial**, responsável por encapsular as informações linguísticas essenciais. Esse objeto, que chamo com carinho de ** objeto homomórfico**, é o produto de operações estruturais baseadas em morfemas.
 
 O objeto mórfico carrega consigo um bloco de dados contendo um conjunto de **instruções genéticas** interpretáveis por qualquer canal, desde que no idioma adequado.
 
