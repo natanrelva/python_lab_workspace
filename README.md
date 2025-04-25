@@ -2,139 +2,113 @@
 
 ## Motivação do Projeto
 
-Após incontáveis horas assistindo ao YouTube com anúncios — sempre os mesmos cursos de inglês para desenvolvedores — algo começou a testar minha paciência. Sabendo que a única linguagem que realmente interessa a esse público é aquela que *compila sem warnings*, decidi revisitar alguns conhecimentos dos tempos de faculdade sobre sistemas distribuídos.
-
-Foi assim que nasceu esta primeira versão do sistema. Ainda me custa acreditar que alguém além de mim vá usá-lo, mas segue firme no processo de testes. A proposta é simples (e um tanto ousada): criar uma solução eficiente para comunicação em múltiplos idiomas, operando de forma descentralizada — algo que, imagino, deixaria o tio Tanenbaum orgulhoso.
+Após horas navegando pelo YouTube, enfrentando anúncios repetitivos de cursos de inglês para desenvolvedores, percebi que a verdadeira linguagem que importa para esse público é aquela que *compila sem warnings*. Inspirado por essa frustração e por conhecimentos de sistemas distribuídos adquiridos na faculdade, decidi criar uma solução inovadora. Assim nasceu a primeira versão deste sistema, ainda em fase de testes, mas com potencial para transformar a comunicação global. A proposta é ousada: desenvolver uma ferramenta descentralizada para comunicação em múltiplos idiomas, que, acredito, teria o aval de Andrew Tanenbaum.
 
 ### O que é o projeto?
 
-Este projeto propõe o desenvolvimento de um sistema de dublagem em tempo real, distribuído e full-duplex, capaz de permitir diálogos naturais entre falantes de diferentes idiomas **sem recorrer à tradução direta**. Em vez disso, o sistema constrói uma **linguagem intermediária universal**, fundamentada em morfismos e estruturas formais, o que possibilita a reconstrução da fala em qualquer idioma de destino com fidelidade semântica e morfológica.
+Este projeto propõe um sistema de dublagem em tempo real, distribuído e full-duplex, que permite diálogos naturais entre falantes de diferentes idiomas **sem depender de tradução literal**. Em vez disso, o sistema cria uma **linguagem intermediária universal** baseada em **morfismos linguísticos** e estruturas formais, reconstruindo a fala no idioma de destino com fidelidade semântica e morfológica.
 
-Dessa forma, não se trata exatamente de um sistema de dublagem no sentido tradicional, mas sim de algo mais próximo do que o cérebro humano faz: quando nos comunicamos, não “traduzimos” palavra por palavra, mas organizamos o pensamento em tempo real, usando o idioma apenas como instrumento. A proposta é replicar essa inteligência estrutural de modo computacional.
+Diferentemente dos sistemas tradicionais de dublagem, que mapeiam palavras diretamente, este framework imita o processamento humano da linguagem: organizamos pensamentos em tempo real, usando o idioma como uma representação de uma estrutura universal subjacente. Aqui, a linguagem é tratada como uma **estrutura composicional universal**, enquanto os idiomas são **instanciações locais** dessa estrutura, formalizadas por gramáticas categóricas.
 
-Em outras palavras, este framework rompe com o paradigma da tradução literal. Ele parte do princípio de que **a linguagem é uma estrutura universal**, enquanto os idiomas são apenas **representações formais e locais** dessa estrutura.
+O sistema rompe com o paradigma da tradução palavra por palavra, utilizando **morfismos** — transformações semânticas que preservam significado — para mapear a entrada linguística em uma representação intermediária, que é então projetada no idioma de saída.
 
 ---
 
 ## Arquitetura e Design
 
-![alt text](image.png)
+### Visão Geral
 
-> *Alt text: Um projeto com dois módulos e um plano secreto de eliminar um deles futuramente.*
+A arquitetura é composta por **canais full-duplex** que processam entrada e saída de áudio em tempo real, um **barramento** temporário para multiplexação de dados, e uma camada de **morfismos linguísticos** que encapsula a lógica semântica. A figura abaixo ilustra a estrutura inicial:
+
+![Diagrama da Arquitetura](image.png)
+
+> *Alt text: Diagrama representando canais full-duplex conectados por um barramento temporário, com planos de migrar para uma arquitetura serverless no futuro.*
 
 ### Canais (C)
 
-A arquitetura baseia-se em múltiplos canais full-duplex, onde cada canal realiza tanto a codificação quanto a decodificação. Cada canal recebe um **objeto de valor especial**, responsável por encapsular as informações linguísticas essenciais. Esse objeto, que chamo com carinho de **objeto mórfico**, é o produto de operações estruturais baseadas em morfemas.
+Os canais são os componentes principais, responsáveis por codificar e decodificar informações linguísticas. Cada canal opera de forma independente, processando áudio em tempo real e gerando um **objeto mórfico** — uma estrutura de dados que encapsula transformações semânticas.
 
-O objeto mórfico carrega consigo um bloco de dados contendo um conjunto de **instruções genéticas** interpretáveis por qualquer canal, desde que no idioma adequado.
+- **Objeto Mórfico**: Em vez de chamar o objeto de "homomórfico" (que implica uma preservação de estrutura específica em teoria das categorias), optamos por "mórfico", refletindo sua função como um portador de transformações semânticas. Esse objeto contém:
+  - **Instruções semânticas**: Representações composicionais de significado, baseadas em morfismos derivados de uma gramática categorial.
+  - **Metadados morfológicos**: Informações sobre flexões (gênero, número, tempo) necessárias para reconstrução no idioma de saída.
+  - **Contexto prosódico**: Dados sobre entonação e ritmo para garantir naturalidade na dublagem.
 
-Atualmente, estamos trabalhando com dois canais básicos:
-
-- **PT-BR** (Português)
+Atualmente, o sistema suporta dois canais:
+- **PT-BR** (Português do Brasil)
 - **EN** (Inglês)
 
-Cada canal possui um idioma de entrada e outro de saída. O canal de entrada utiliza o microfone padrão do sistema para capturar e transmitir a voz. O canal de saída — atualmente em desenvolvimento — será um driver de áudio virtual que poderá ser integrado a plataformas como o Google Meet.
+Cada canal possui:
+- **Entrada**: Captura áudio via microfone, processando-o em tempo real com reconhecimento de fala (ASR).
+- **Saída**: Gera áudio no idioma de destino, usando síntese de voz (TTS). Em desenvolvimento, um driver de áudio virtual permitirá integração com plataformas como Google Meet.
 
 ---
 
 ### Barramento (B)
 
-O barramento é, por enquanto, uma **estrutura provisória** de multiplexação dos dados. Ainda não conta com mecanismos robustos de sincronização, mas cumpre seu papel nesta fase inicial do projeto.
+O barramento é uma estrutura temporária que multiplexa os objetos mórficos entre os canais. Ele gerencia o fluxo de dados, mas carece de sincronização robusta, sendo um ponto de melhoria.
 
-Em versões futuras, o sistema será migrado para um ambiente **Kubernetes (K8s)**, onde cada canal será executado como um microserviço serverless. Nesse cenário, o barramento poderá ser eliminado por completo, com os canais operando de forma direta e autônoma.
+**Plano Futuro**: Migrar para uma arquitetura **serverless** em **Kubernetes (K8s)**, onde cada canal será um microserviço independente. Isso eliminará o barramento, permitindo comunicação direta entre canais via APIs assíncronas, com maior escalabilidade e resiliência.
+
+---
+
+### Camada de Morfismos
+
+A inovação central é a **camada de morfismos**, que opera como uma rede neural morfossintática (RNM), integrada com um autômato mórfico (AM) e uma gramática de produção mórfica (GPM), conforme discutido anteriormente:
+
+- **Rede Neural Morfossintática (RNM)**: Transforma a entrada linguística (áudio ou texto) em morfismos parciais, representando transformações semânticas. Usa embeddings contextuais (inspirados em BERT) para capturar significado.
+- **Autômato Mórfico (AM)**: Navega pela estrutura gramatical, decidindo como compor os morfismos (ex.: \( g \circ f \)). Funciona como um parser semântico dinâmico.
+- **Gramática de Produção Mórfica (GPM)**: Define regras categóricas, como \( f: A \to B, g: B \to C \implies g \circ f: A \to C \), garantindo composições válidas.
+
+Essa camada cria a linguagem intermediária universal, mapeando a entrada para uma representação abstrata antes de projetá-la no idioma de saída.
 
 ---
 
 ## Como Utilizar
 
-Por enquanto, o sistema é uma **prova de conceito (POC)**. Para testá-lo localmente, basta executar:
+O sistema é uma **prova de conceito (POC)**. Para executá-lo localmente:
 
 ```bash
 docker-compose up --build
 ```
 
-O sistema iniciará automaticamente e tudo o que for falado em português será reproduzido em inglês em tempo real.
+Isso inicia o sistema, que converte áudio em português para inglês em tempo real. Requisitos:
+- Docker instalado.
+- Microfone funcional.
+
+---
+
+## Correções e Refinamentos Conceituais
+
+1. **Terminologia: Objeto Mórfico**:
+   - O termo "objeto homomórfico" foi substituído por "objeto mórfico", pois "homomorfismo" implica uma preservação de estrutura específica (como em álgebra). Morfismos, na teoria das categorias, são mais gerais, adequando-se à ideia de transformações semânticas.
+   - O objeto mórfico agora é descrito com maior clareza, incluindo instruções semânticas, metadados morfológicos e contexto prosódico.
+
+2. **Linguagem Intermediária Universal**:
+   - Reforçada a ideia de que a linguagem intermediária é uma estrutura composicional, baseada em morfismos e gramáticas categóricas, alinhando-se com frameworks como DisCoCat [Mathematical Foundations for a Compositional Distributional Model of Meaning](https://arxiv.org/abs/1003.4394).
+   - Esclarecido que a abordagem evita tradução literal, focando em transformações semânticas.
+
+3. **Integração com Conceitos do Chat**:
+   - Incorporada a arquitetura de RNM, AM e GPM, detalhando como a camada de morfismos opera como uma rede neural que aprende a compor significados, não apenas prever palavras.
+   - Reforçada a conexão com gramáticas categóricas e o cálculo lambda para composição semântica.
+
+4. **Barramento e Escalabilidade**:
+   - Clarificado que o barramento é temporário e será substituído por uma arquitetura serverless, com microserviços em K8s, aumentando a escalabilidade.
+   - Adicionado o plano de usar APIs assíncronas para comunicação direta entre canais.
+
+5. **Notas Futuras**:
+   - Incluída a possibilidade de criar linguagens artificiais, usando gramáticas formais (como as de Chomsky) para gerar sequências decodificáveis, com morfismos derivativos como terminais ou não-terminais.
+   - Especificado que a retropropagação na rede neural será calibrada com base na coerência das sequências geradas, alinhando-se com a ideia de interpretabilidade.
 
 ---
 
 ## Notas Finais
 
-Este projeto ainda está em sua infância, mas já vislumbro várias possibilidades para as próximas fases. Aos poucos, vou refinando as ideias, testando novas abordagens e, quem sabe, transformando essa curiosidade pessoal em uma ferramenta real para facilitar a comunicação entre mundos linguísticos.
+Este projeto é uma semente com potencial para revolucionar a comunicação global. Embora esteja em fase inicial, a combinação de morfismos linguísticos, redes neurais e gramáticas categóricas abre portas para aplicações como tradução semântica, dublagem em tempo real e criação de linguagens artificiais. As próximas etapas incluem testes mais robustos, integração com plataformas de videoconferência e expansão para novos idiomas.
 
-## Notas para não esquecer
+## Futuro para Não Esquecer
 
-Futuramente pretendo implementar:
-
-- Drive virtual para utilizar em video chamada
-- Feature de personalização da voz de saída para ser a mesma de quem fala.
-- Rede social a nível global para falantes nativos de indionas desconhecido poder criar seus próprios canais.
-
-# Sistema de Dublagem em Tempo Real
-
-## Motivação do Projeto
-
-Após incontáveis horas assistindo ao YouTube com anúncios — sempre os mesmos cursos de inglês para desenvolvedores — algo começou a testar minha paciência. Sabendo que a única linguagem que realmente interessa a esse público é aquela que *compila sem warnings*, decidi revisitar alguns conhecimentos dos tempos de faculdade sobre sistemas distribuídos.
-
-Foi assim que nasceu esta primeira versão do sistema. Ainda me custa acreditar que alguém além de mim vá usá-lo, mas segue firme no processo de testes. A proposta é simples (e um tanto ousada): criar uma solução eficiente para comunicação em múltiplos idiomas, operando de forma descentralizada — algo que, imagino, deixaria o tio Tanenbaum orgulhoso.
-
-### O que é o projeto?
-
-Este projeto propõe o desenvolvimento de um sistema de dublagem em tempo real, distribuído e full-duplex, capaz de permitir diálogos naturais entre falantes de diferentes idiomas **sem recorrer à tradução direta**. Em vez disso, o sistema constrói uma **linguagem intermediária universal**, fundamentada em morfismos e estruturas formais, o que possibilita a reconstrução da fala em qualquer idioma de destino com fidelidade semântica e morfológica.
-
-Dessa forma, não se trata exatamente de um sistema de dublagem no sentido tradicional, mas sim de algo mais próximo do que o cérebro humano faz: quando nos comunicamos, não “traduzimos” palavra por palavra, mas organizamos o pensamento em tempo real, usando o idioma apenas como instrumento. A proposta é replicar essa inteligência estrutural de modo computacional.
-
-Em outras palavras, este framework rompe com o paradigma da tradução literal. Ele parte do princípio de que **a linguagem é uma estrutura universal**, enquanto os idiomas são apenas **representações formais e locais** dessa estrutura.
-
----
-
-## Arquitetura e Design
-
-![alt text](image.png)
-
-> *Alt text: Um projeto com dois módulos e um plano secreto de eliminar um deles futuramente.*
-
-### Canais (C)
-
-A arquitetura baseia-se em múltiplos canais full-duplex, onde cada canal realiza tanto a codificação quanto a decodificação. Cada canal recebe um **objeto de valor especial**, responsável por encapsular as informações linguísticas essenciais. Esse objeto, que chamo com carinho de ** objeto homomórfico**, é o produto de operações estruturais baseadas em morfemas.
-
-O objeto mórfico carrega consigo um bloco de dados contendo um conjunto de **instruções genéticas** interpretáveis por qualquer canal, desde que no idioma adequado.
-
-Atualmente, estamos trabalhando com dois canais básicos:
-
-- **PT-BR** (Português)
-- **EN** (Inglês)
-
-Cada canal possui um idioma de entrada e outro de saída. O canal de entrada utiliza o microfone padrão do sistema para capturar e transmitir a voz. O canal de saída — atualmente em desenvolvimento — será um driver de áudio virtual que poderá ser integrado a plataformas como o Google Meet.
-
----
-
-### Barramento (B)
-
-O barramento é, por enquanto, uma **estrutura provisória** de multiplexação dos dados. Ainda não conta com mecanismos robustos de sincronização, mas cumpre seu papel nesta fase inicial do projeto.
-
-Em versões futuras, o sistema será migrado para um ambiente **Kubernetes (K8s)**, onde cada canal será executado como um microserviço serverless. Nesse cenário, o barramento poderá ser eliminado por completo, com os canais operando de forma direta e autônoma.
-
----
-
-## Como Utilizar
-
-Por enquanto, o sistema é uma **prova de conceito (POC)**. Para testá-lo localmente, basta executar:
-
-```bash
-docker-compose up --build
-```
-
-O sistema iniciará automaticamente e tudo o que for falado em português será reproduzido em inglês em tempo real.
-
-## Notas Finais
-
-Este projeto ainda está em sua infância, mas já vislumbro várias possibilidades para as próximas fases. Aos poucos, vou refinando as ideias, testando novas abordagens e, quem sabe, transformando essa curiosidade pessoal em uma ferramenta real para facilitar a comunicação entre mundos linguísticos.
-
-## Futuro para não esquecer
-
-Futuramente pretendo implementar:
-
-- Drive virtual para utilizar em video chamada
-- Feature de personalização da voz de saída para ser a mesma de quem fala.
-- Rede social a nível global para falantes nativos de indionas desconhecido poder criar seus próprios canais.
-- Possibilidade de criar idiomas virtuis, sabendo que tanto a entrada quanto saidas processam objetos morficos, não é restritivo existir a linguagem, apenas evoluir o sistema para criar liguagem formais onde as regras de produção em gramáticas de Chomsky talvez possa ser utilizada com um morfimos derivativos das operações internas do sistema seja terminais ou não terminais, para gerar as sequências de uma linguagem decoficicavel, caso contrário não existem como ter uma retropropagação para calibrar a rede.
+Planejamos implementar:
+- **Driver de áudio virtual** para integração com plataformas como Google Meet.
+- **Personalização de voz**, replicando a voz do falante na saída, usando técnicas de clonagem vocal.
+- **Rede social global**, permitindo que falantes de idiomas menos representados criem canais personalizados.
+- **Criação de linguagens artificiais**: Usar gramáticas formais (como as de Chomsky) para gerar linguagens decodificáveis, com morfismos derivativos como terminais ou não-terminais. A retropropagação será calibrada para garantir coerência semântica, permitindo que a rede aprenda a compor significados de forma interpretável.
